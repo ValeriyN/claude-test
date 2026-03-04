@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST http://localhost:3000/api/chat -H \"Content-Type: application/json\" -d '{\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"create a card\"\",\"\"id\"\":\"\"1\"\"}],\"\"files\"\":{}}' --max-time 10)",
+      "Bash(curl -s -X POST http://localhost:3000/api/chat -H \"Content-Type: application/json\" -d '{\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"create a card\"\",\"\"id\"\":\"\"1\"\"}],\"\"files\"\":{}}' --max-time 15 -v)",
+      "Bash(NODE_OPTIONS='--require ./node-compat.cjs' node -e \":*)",
+      "Bash(ls -la .env*)",
+      "Bash(curl -s -X POST http://localhost:3000/api/chat -H \"Content-Type: application/json\" -d '{\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"say hi\"\",\"\"id\"\":\"\"1\"\"}],\"\"files\"\":{}}' --max-time 20)",
+      "Bash(source .env)",
+      "Bash(curl -s -X POST \"https://api.anthropic.com/v1/messages\" -H \"x-api-key: $ANTHROPIC_API_KEY\" -H \"anthropic-version: 2023-06-01\" -H \"content-type: application/json\" -d '{\"\"model\"\":\"\"claude-haiku-4-5-20251001\"\",\"\"max_tokens\"\":100,\"\"messages\"\":[{\"\"role\"\":\"\"user\"\",\"\"content\"\":\"\"say hi\"\"}]}')",
+      "Bash(git add src/components/chat/ToolCallBadge.tsx src/components/chat/__tests__/ToolCallBadge.test.tsx src/components/chat/MessageList.tsx src/components/chat/__tests__/MessageList.test.tsx src/components/chat/ChatInterface.tsx src/lib/provider.ts CLAUDE.md)",
+      "Bash(git add .)"
+    ]
+  }
+}
