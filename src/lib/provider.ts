@@ -41,19 +41,6 @@ export class MockLanguageModel implements LanguageModelV1 {
     return "";
   }
 
-  private getLastToolResult(messages: LanguageModelV1Message[]): any {
-    // Find the last tool message
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].role === "tool") {
-        const content = messages[i].content;
-        if (Array.isArray(content) && content.length > 0) {
-          return content[0];
-        }
-      }
-    }
-    return null;
-  }
-
   private async *generateMockStream(
     messages: LanguageModelV1Message[],
     userPrompt: string
@@ -202,79 +189,57 @@ The component is now ready to use. You can see the preview on the right side of 
         return `import React, { useState } from 'react';
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Handle form submission here
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Contact Us</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full max-w-lg">
+      <h1 className="text-white text-4xl font-black tracking-tight mb-2">Get in touch</h1>
+      <p className="text-violet-400 text-sm mb-10">We'd love to hear from you.</p>
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {['name', 'email'].map((field) => (
+          <div key={field}>
+            <label className="block text-xs font-mono text-violet-400 uppercase tracking-widest mb-2">
+              {field}
+            </label>
+            <input
+              type={field === 'email' ? 'email' : 'text'}
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+              placeholder={\`Your \${field}\`}
+              className="w-full bg-transparent border-b border-violet-800 pb-3 text-white placeholder-violet-900 focus:outline-none focus:border-violet-400 transition-colors"
+            />
+          </div>
+        ))}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message
+          <label className="block text-xs font-mono text-violet-400 uppercase tracking-widest mb-2">
+            message
           </label>
           <textarea
-            id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
             required
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="What's on your mind?"
+            className="w-full bg-transparent border-b border-violet-800 pb-3 text-white placeholder-violet-900 focus:outline-none focus:border-violet-400 transition-colors resize-none"
           />
         </div>
-        
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+          className="w-full bg-violet-600 hover:bg-violet-500 text-white font-bold py-4 transition-colors tracking-wide"
         >
-          Send Message
+          Send Message →
         </button>
       </form>
     </div>
@@ -286,28 +251,26 @@ export default ContactForm;`;
       case "card":
         return `import React from 'react';
 
-const Card = ({ 
-  title = "Welcome to Our Service", 
+const Card = ({
+  title = "Welcome to Our Service",
   description = "Discover amazing features and capabilities that will transform your experience.",
   imageUrl,
-  actions 
+  actions
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-zinc-900 border border-zinc-800 overflow-hidden group hover:border-zinc-600 transition-colors duration-300">
       {imageUrl && (
-        <img 
-          src={imageUrl} 
+        <img
+          src={imageUrl}
           alt={title}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-cover opacity-80 group-hover:opacity-100 transition-opacity"
         />
       )}
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
+      <div className="p-8">
+        <h3 className="text-white text-xl font-bold tracking-tight mb-3">{title}</h3>
+        <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
         {actions && (
-          <div className="mt-4">
-            {actions}
-          </div>
+          <div className="border-t border-zinc-800 pt-5 mt-6">{actions}</div>
         )}
       </div>
     </div>
@@ -322,40 +285,30 @@ export default Card;`;
 const Counter = () => {
   const [count, setCount] = useState(0);
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    setCount(count - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
-
   return (
-    <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Counter</h2>
-      <div className="text-4xl font-bold mb-6">{count}</div>
-      <div className="flex gap-4">
-        <button 
-          onClick={decrement}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+    <div className="flex flex-col items-center gap-8">
+      <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest">Count</p>
+      <span className="text-9xl font-black tabular-nums tracking-tighter text-white">
+        {count}
+      </span>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setCount(c => c - 1)}
+          className="w-12 h-12 rounded-full border border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-white transition-colors text-xl"
         >
-          Decrease
+          −
         </button>
-        <button 
-          onClick={reset}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+        <button
+          onClick={() => setCount(0)}
+          className="px-5 h-9 rounded-full text-xs font-mono text-zinc-500 hover:text-zinc-300 border border-zinc-800 hover:border-zinc-600 transition-colors tracking-widest uppercase"
         >
           Reset
         </button>
-        <button 
-          onClick={increment}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        <button
+          onClick={() => setCount(c => c + 1)}
+          className="w-12 h-12 rounded-full border border-zinc-700 text-zinc-400 hover:border-zinc-400 hover:text-white transition-colors text-xl"
         >
-          Increase
+          +
         </button>
       </div>
     </div>
@@ -371,20 +324,20 @@ export default Counter;`;
       case "form":
         return "    console.log('Form submitted:', formData);";
       case "card":
-        return '      <div className="p-6">';
+        return "        <p className=\"text-zinc-400 text-sm leading-relaxed\">{description}</p>";
       default:
-        return "  const increment = () => setCount(count + 1);";
+        return "      <span className=\"text-9xl font-black tabular-nums tracking-tighter text-white\">";
     }
   }
 
   private getNewStringForReplace(componentType: string): string {
     switch (componentType) {
       case "form":
-        return "    console.log('Form submitted:', formData);\n    alert('Thank you! We\\'ll get back to you soon.');";
+        return "    console.log('Form submitted:', formData);\n    setSent(true);";
       case "card":
-        return '      <div className="p-6 hover:bg-gray-50 transition-colors">';
+        return "        <p className=\"text-zinc-400 text-sm leading-relaxed mb-2\">{description}</p>";
       default:
-        return "  const increment = () => setCount(prev => prev + 1);";
+        return `      <span className={\`text-9xl font-black tabular-nums tracking-tighter \${count < 0 ? 'text-rose-400' : 'text-white'}\`}>`;
     }
   }
 
@@ -394,14 +347,14 @@ export default Counter;`;
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <Card 
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-8">
+      <div className="w-full max-w-sm">
+        <Card
           title="Amazing Product"
           description="This is a fantastic product that will change your life. Experience the difference today!"
           actions={
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-              Learn More
+            <button className="text-sm font-mono text-zinc-400 hover:text-white transition-colors uppercase tracking-widest">
+              Learn More →
             </button>
           }
         />
@@ -411,14 +364,24 @@ export default function App() {
 }`;
     }
 
+    if (componentName === "ContactForm") {
+      return `import ContactForm from '@/components/ContactForm';
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-violet-950 flex items-center justify-center p-8">
+      <ContactForm />
+    </div>
+  );
+}`;
+    }
+
     return `import ${componentName} from '@/components/${componentName}';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md">
-        <${componentName} />
-      </div>
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-8">
+      <${componentName} />
     </div>
   );
 }`;
